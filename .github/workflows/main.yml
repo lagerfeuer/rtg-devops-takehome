@@ -26,9 +26,9 @@ jobs:
       - name: Terraform validate
         run: terraform validate
       - name: Terraform plan
-        run: terraform plan
+        run: terraform plan -out=planfile
       - name: Terraform apply
-        run: terraform apply
+        run: terraform apply planfile
   
   gatsby:
     name: Build and deploy Gatsby
