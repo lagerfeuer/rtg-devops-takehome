@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: terraform
+        working-directory: ./terraform
     steps:
-      - run: pwd && ls
+      - uses: actions/checkout@v2
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
       - name: Terraform init
         run: |
-        terraform init \
-        -backend-config="bucket=${{ secrets.TFSTATE_BUCKET }}" \
-        -backend-config="region=${{ secrets.TFSTATE_REGION }}" \
-        -backend-config="key=${{ secrets.TFSTATE_KEY }}"
+          terraform init \
+          -backend-config="bucket=${{ secrets.TFSTATE_BUCKET }}" \
+          -backend-config="region=${{ secrets.TFSTATE_REGION }}" \
+          -backend-config="key=${{ secrets.TFSTATE_KEY }}"
       - name: Terraform validate
         run: terraform validate
       - name: Terraform plan
@@ -35,5 +35,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: terraform
     steps:
+      - uses: actions/checkout@v2
       - name: Placeholder
         run: echo "Gatsby"
