@@ -1,7 +1,11 @@
 data "aws_iam_policy_document" "s3_public_read" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = [aws_s3_bucket.gatsby_bucket.arn]
+    resources = ["${aws_s3_bucket.gatsby_bucket.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
   }
 }
 
