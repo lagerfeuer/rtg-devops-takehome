@@ -29,6 +29,7 @@ jobs:
         run: terraform plan -out=planfile
       - name: Terraform apply
         run: terraform apply planfile
+        if: github.ref == 'refs/heads/master'
   
   gatsby:
     name: Build and deploy Gatsby
@@ -46,3 +47,4 @@ jobs:
         run: npm run build
       - name: Deploy
         run: aws s3 sync ./public s3://ldz-rtg-takehome-gatsby
+        if: github.ref == 'refs/heads/master'
