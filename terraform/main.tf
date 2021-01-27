@@ -1,12 +1,28 @@
-terraform {
-  backend "s3" {}
-}
-
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
-module "website" {
-  source         = "./modules/S3"
-  s3_bucket_name = "ldz-rtg-takehome-gatsby"
+data "aws_iam_policy_document" "s3_public_read" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.gatsby_bucket.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+}
+
+resource "aws_s3_bucket" "gatsby_bucket" {
+  bucket = var.s3_bucket_name
+  acl    = "public-read"
+
+  website {
+    index_document = "index.html"
+  }
+}
+
+resource "aws_s3_bucket_policy" "gatsby_bucket_policy" {
+  bucket = aws_s3_bucket.gatsby_bucket.id
+  policy = data.aws_iam_policy_document.s3_public_read.json
 }
